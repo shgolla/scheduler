@@ -5,6 +5,7 @@ package com.example.scheduler.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -22,9 +23,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Restriction Type
@@ -69,7 +67,7 @@ public class Restriction implements Serializable{
     
     //@JsonIgnore
     @ManyToMany(mappedBy = "restrictions", fetch = FetchType.LAZY)
-	private Set<Panel> panels;
+	private Set<Panel> panels = new HashSet<>();
 
 	
 	/**
@@ -164,4 +162,11 @@ public class Restriction implements Serializable{
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	/**
+	 * @return the panels
+	 
+	public Set<Panel> getPanels() {
+		return panels;
+	}*/
 }

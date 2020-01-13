@@ -5,6 +5,7 @@ package com.example.scheduler.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -45,12 +46,12 @@ public class Panel implements Serializable{
 	@Column(name="name")
 	private String name;
 	
-	@ManyToMany(cascade=CascadeType.ALL,  fetch = FetchType.LAZY)
+	@ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name="panel_restrictions",
-	joinColumns = {@JoinColumn(referencedColumnName = "id")},
-	inverseJoinColumns={@JoinColumn(referencedColumnName="id")}
+	joinColumns = {@JoinColumn(name="panels_id", referencedColumnName = "id")},
+	inverseJoinColumns={@JoinColumn(name="restrictions_id", referencedColumnName="id")}
 	)
-	private Set<Restriction> restrictions;
+	private Set<Restriction> restrictions = new HashSet<>() ;
 	
 	@CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
