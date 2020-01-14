@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "a6e71667-d1d3-4ab7-a26c-d26fef885829",
+		"name": "Scheduler App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Panel CRUD Operations",
+			"item": [
+				{
+					"name": "getPanels",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"firstName\" : \"admin\",\n\"lastName\" : \"admin\",\n\"email\" : \"admin@gmail.com\",\n\"createdBy\" : \"admin\",\n\"updatedBy\" : \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createPanels",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"name\" : \"panel4\",\n\"createdBy\" : \"admin\",\n\"updatedBy\" : \"admin\",\n \"region\" : {\n \t\"name\" : \"south\",\n \t\"country\" : {\n \t\t\"name\" : \"UK\"\n \t}\n },\n\"restrictions\" : [\n\t{\n\t\t\"type\" : \"healthy\",\n\t\t\"createdBy\" : \"admin\",\n\t\t\"updatedBy\" : \"admin\"\n\t}\n ]\n\n \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Restrictions CRUD Operations",
+			"item": [
+				{
+					"name": "getRestrictionFromPanel",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"firstName\" : \"admin\",\n\"lastName\" : \"admin\",\n\"email\" : \"admin@gmail.com\",\n\"createdBy\" : \"admin\",\n\"updatedBy\" : \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels/7/restrictions/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels",
+								"7",
+								"restrictions",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "postRestrictionToPanel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\t\t\"type\" : \"unhealthy\",\n\t\t\"createdBy\" : \"admin\",\n\t\t\"updatedBy\" : \"admin\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels/24/restrictions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels",
+								"24",
+								"restrictions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "putRestrictionToPanel",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\t\t\n\t\t\"type\" : \"unhealthy ad\",\n\t\t\"createdBy\" : \"admin\",\n\t\t\"updatedBy\" : \"admin\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels/24/restrictions/25",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels",
+								"24",
+								"restrictions",
+								"25"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteRestrictionFromPanel",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\t\t\n\t\t\"type\" : \"unhealthy ad\",\n\t\t\"createdBy\" : \"admin\",\n\t\t\"updatedBy\" : \"admin\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/panels/24/restrictions/28",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"panels",
+								"24",
+								"restrictions",
+								"28"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Region CRUD Operations",
+			"item": [
+				{
+					"name": "get Regions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/regions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Regions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n    {\n       \n        \"name\": \"east\",\n        \"country\": {\n            \"id\" : 42,\n            \"name\": \"UK\"\n        }\n    }\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/regions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get panels by region id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/regions/37/panels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions",
+								"37",
+								"panels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read panel from a region",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/regions/37/panels/36",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions",
+								"37",
+								"panels",
+								"36"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete panel from a region",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/regions/37/panels/36",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions",
+								"37",
+								"panels",
+								"36"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post panel to a region",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n    {\n\"name\" : \"panel4\",\n\"createdBy\" : \"admin\",\n\"updatedBy\" : \"admin\",\n \n\"restrictions\" : [\n\t{\n\t\t\"type\" : \"healthy\",\n\t\t\"createdBy\" : \"admin\",\n\t\t\"updatedBy\" : \"admin\"\n\t}\n ]\n\n \n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/regions/41/panels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"regions",
+								"41",
+								"panels"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "397a38cf-f2d5-42db-aa23-6fcc859ed2c7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "05f34395-e39d-4cd7-93af-7fe3fe5a1b68",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
