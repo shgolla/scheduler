@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.example.scheduler.entity;
+package com.example.scheduler.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,45 +31,24 @@ import org.springframework.data.annotation.LastModifiedBy;
  * @author sgolla
  *
  */
-//@JsonIgnoreProperties
-@Entity
-@Table(name="Restriction")
-public class Restriction implements Serializable{
+public class RestrictionDto implements Serializable{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7711495629093679665L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private long id;
 	
-	@NotBlank(message = "Restriction type cannot be blank")
-	@Column(name="type")
 	private String type;
 	
-	@CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false)
     private Date createdAt;
-
-    @Column(name = "created_by", nullable = false)
-    @CreatedBy
     private String createdBy;
 
-    @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
-    @Column(name = "updated_by", nullable = false)
-    @LastModifiedBy
     private String updatedBy;
-    
-    //@JsonIgnore
-    @ManyToMany(mappedBy = "restrictions", fetch = FetchType.LAZY)
-	private Set<Panel> panels = new HashSet<>();
+	private Set<PanelDto> panels = new HashSet<>();
 
 	
 	/**
@@ -105,7 +84,7 @@ public class Restriction implements Serializable{
 	/**
 	 * @param panels the panels to set
 	 */
-	public void setPanels(Set<Panel> panels) {
+	public void setPanels(Set<PanelDto> panels) {
 		this.panels = panels;
 	}
 
@@ -181,7 +160,7 @@ public class Restriction implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Restriction other = (Restriction) obj;
+		RestrictionDto other = (RestrictionDto) obj;
 		if (type == null) {
 			if (other.type != null)
 				return false;

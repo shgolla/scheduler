@@ -4,9 +4,9 @@
 package com.example.scheduler.controller;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,73 +15,97 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.scheduler.entity.Panel;
 import com.example.scheduler.entity.Restriction;
 import com.example.scheduler.exception.ResourceNotFoundException;
-import com.example.scheduler.repository.PanelRepository;
+import com.example.scheduler.service.PanelService;
 
 /**
+ * Pnael Controller class to serve Panel resource
  * @author sgolla
  *
  */
 @RestController
+@RequestMapping(produces = {"application/json", "application/vnd.example.scheduler.v1+json"})
 public class PanelController {
 
+	/** Panel service */
 	@Autowired
-	PanelRepository panelRepo;
+	PanelService panelService;
 
+	/**
+	 * Get Panel by Id
+	 * @param id
+	 * @return Panel
+	 * @throws ResourceNotFoundException
+	 */
 	@GetMapping("/panels/{id}")
-	private Panel getPanelById(@Valid @PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-		return panelRepo.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find Panel with Id " + id));
-	}
-
-	@GetMapping("/panels")
-	private List<Panel> getPanels() {
-		return panelRepo.findAll();
-	}
-
-	@PostMapping("/panels")
-	private Panel createPanel(@Valid @RequestBody Panel panel) {
-		return panelRepo.save(panel);
-	}
-
-	@PutMapping("/panels/{id}")
-	private Panel modifyPanel(@PathVariable(value = "id") Long panelId, @Valid @RequestBody Panel inputPanel)
-			throws ResourceNotFoundException {
-
-		Panel panel = panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Panel Not Found with Id " + panelId));
-
-		panel.setName(inputPanel.getName());
-		panel.setRestrictions(inputPanel.getRestrictions());
-		return panelRepo.save(panel);
-	}
-
-	@DeleteMapping("/panels/{id}")
-	private Boolean deletePanel(@Valid @PathVariable(value = "id") Long panelId) throws ResourceNotFoundException {
-		Panel panel = panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Panel Not Found with Id " + panelId));
-		panelRepo.delete(panel);
-		return true;
+	private Panel getPanelById(@NotNull @PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+		return panelService.findPanelById(id);
 	}
 
 	/**
+	 * Get all Panels
+	 * @return List<Panel>
+	 */
+	@GetMapping("/panels")
+	private List<Panel> getPanels() {
+		return panelService.getAllPanels();
+	}
+
+	/**
+	 * Create new Panel
+	 * @param panel
+	 * @return Panel
+	 */
+	@PostMapping("/panels")
+	private Panel createPanel(@Valid @RequestBody Panel panel) {
+		return panelService.savePanel(panel);
+	}
+	
+	/**
+	 * Delete Panel by Id
+	 * @param panelId
+	 * @return Boolean
+	 * @throws ResourceNotFoundException
+	 */
+	@DeleteMapping("/panels/{id}")
+	private Boolean deletePanel(@NotNull @PathVariable(value = "id") Long panelId) throws ResourceNotFoundException {
+		return panelService.deletePanel(panelId);
+	}
+
+	/**
+	 * Update given Panel
+	 * @param panelId
+	 * @param inputPanel
+	 * @return Panel
+	 * @throws ResourceNotFoundException
+	 */
+	@PutMapping("/panels/{id}")
+	private Panel modifyPanel(@NotNull @PathVariable(value = "id") Long panelId, @Valid @RequestBody Panel inputPanel)
+			throws ResourceNotFoundException {
+
+		Panel panel = panelService.findPanelById(panelId);
+		panel.setName(inputPanel.getName());
+		panel.setRestrictions(inputPanel.getRestrictions());
+		return panelService.savePanel(panel);
+	}
+
+	
+
+	/**
 	 * Read Restriction from Panel
-	 * @param id
+	 * @param panelId
+	 * @param restrictionId
 	 * @return
 	 * @throws ResourceNotFoundException
 	 */
 	@GetMapping("/panels/{panelId}/restrictions/{restrictionId}")
-	private Restriction getRestrictionFromPanel(@Valid @PathVariable(value = "panelId") Long panelId, @Valid @PathVariable(value = "restrictionId") Long restrictionId) throws ResourceNotFoundException{
-		return panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find Panel with Id "+panelId))
-				.getRestrictions().stream()
-				.filter(restriction -> restriction.getId() == restrictionId).findFirst()
-				.orElseThrow(() -> new ResourceNotFoundException(
-						"Restriction Not found with Id "+restrictionId));
+	private Restriction getRestrictionFromPanel(@NotNull @PathVariable(value = "panelId") Long panelId, @NotNull @PathVariable(value = "restrictionId") Long restrictionId) throws ResourceNotFoundException{
+		return panelService.getRestrictionFromPanel(panelId, restrictionId);
 				
 	}
 	
@@ -89,20 +113,13 @@ public class PanelController {
 	 * Add Restriction to Panel.
 	 * Ignores Restriction if already exists in Panel
 	 * @param panelId
-	 * @param restrictionId
+	 * @param Restriction
 	 * @return Restriction
 	 * @throws ResourceNotFoundException
 	 */
 	@PostMapping("/panels/{panelId}/restrictions")
-	private Panel addRestrictionToPanel(@Valid @PathVariable(value = "panelId") Long panelId, @Valid @RequestBody Restriction restriction) throws ResourceNotFoundException{
-		Panel panel = panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find Panel with Id "+panelId));
-		 
-		Set<Restriction> restrictions = panel.getRestrictions();
-		if (restrictions.stream().filter(rest -> rest.getType().equalsIgnoreCase(restriction.getType())).count() == 0) {
-			restrictions.add(restriction);
-		}
-		return panelRepo.save(panel);
+	private Panel addRestrictionToPanel(@NotNull @PathVariable(value = "panelId") Long panelId, @Valid @RequestBody Restriction restriction) throws ResourceNotFoundException{
+		return panelService.addRestrictionToPanel(panelId, restriction);
 	}
 	
 	/**
@@ -111,23 +128,16 @@ public class PanelController {
 	 * To add new Restriction
 	 * @param panelId
 	 * @param restrictionId
+	 * @param Restriction
 	 * @return Restriction
 	 * @throws ResourceNotFoundException
 	 */
 	@PutMapping("/panels/{panelId}/restrictions/{restrictionId}")
-	private Panel modifyRestrictionInAPanel(@Valid @PathVariable(value = "panelId") Long panelId,
-			@Valid @PathVariable(value="restrictionId") Long restrictionId,
+	private Panel modifyRestrictionInAPanel(@NotNull @PathVariable(value = "panelId") Long panelId,
+			@NotNull @PathVariable(value="restrictionId") Long restrictionId,
 			@Valid @RequestBody Restriction inputRestriction) throws ResourceNotFoundException{
-		Panel panel = panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find Panel with Id "+panelId));
-		
-		Restriction foundRestriction = panel.getRestrictions().stream()
-		.filter(restriction -> restriction.getId() == restrictionId)
-		.findFirst()
-		.orElseThrow(() -> new ResourceNotFoundException("Restriction not found with Id "+restrictionId));
-		foundRestriction.setType(inputRestriction.getType());
 
-		return panelRepo.save(panel);
+		return panelService.modifyRestrictionInAPanel(panelId, restrictionId, inputRestriction);
 	}
 	
 	
@@ -141,19 +151,9 @@ public class PanelController {
 	 * @throws ResourceNotFoundException
 	 */
 	@DeleteMapping("/panels/{panelId}/restrictions/{restrictionId}")
-	private void deleteRestrictionFromAPanel(@Valid @PathVariable(value = "panelId") Long panelId, 
-			@Valid @PathVariable(value = "restrictionId") Long restrictionId) throws ResourceNotFoundException{
-		Panel panel = panelRepo.findById(panelId)
-				.orElseThrow(() -> new ResourceNotFoundException("Could not find Panel with Id "+panelId));
-		
-		Restriction foundRestriction = panel.getRestrictions().stream()
-		.filter(restriction -> restriction.getId() == restrictionId)
-		.findFirst()
-		.orElseThrow(() -> new ResourceNotFoundException("Restriction not found with Id "+restrictionId));
-		
-		panel.getRestrictions().remove(foundRestriction);
-		
-		panelRepo.save(panel);
+	private void deleteRestrictionFromAPanel(@NotNull @PathVariable(value = "panelId") Long panelId, 
+			@NotNull @PathVariable(value = "restrictionId") Long restrictionId) throws ResourceNotFoundException{
+		panelService.deleteRestrictionFromAPanel(panelId, restrictionId);
 
 	}
 	
