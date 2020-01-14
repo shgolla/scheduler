@@ -3,24 +3,18 @@
  */
 package com.example.scheduler.entity;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,28 +22,31 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
 /**
- * Restriction Type
- * 
  * @author sgolla
  *
  */
-//@JsonIgnoreProperties
 @Entity
-@Table(name="Restriction")
-public class Restriction implements Serializable{
+public class Schedule {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7711495629093679665L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private long id;
 	
-	@NotBlank(message = "Restriction type cannot be blank")
-	@Column(name="type")
-	private String type;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "advertisement_id")
+	private Advertisement advertisement;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "panel_id")
+	private Panel panel;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "start_time")
+	private Date startTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "end_time")
+	private Date endTime;
 	
 	@CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,15 +65,7 @@ public class Restriction implements Serializable{
     @Column(name = "updated_by", nullable = false)
     @LastModifiedBy
     private String updatedBy;
-    
-    //@JsonIgnore
-    @ManyToMany(mappedBy = "restrictions", fetch = FetchType.LAZY)
-	private Set<Panel> panels = new HashSet<>();
-    
-    @OneToMany(mappedBy = "restriction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Advertisement> advertisements = new HashSet<>();
 
-	
 	/**
 	 * @return the id
 	 */
@@ -92,26 +81,59 @@ public class Restriction implements Serializable{
 	}
 
 	/**
-	 * @return the type
+	 * @return the advertisement
 	 */
-	public String getType() {
-		return type;
+	public Advertisement getAdvertisement() {
+		return advertisement;
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param advertisement the advertisement to set
 	 */
-	public void setType(String type) {
-		this.type = type;
+	public void setAdvertisement(Advertisement advertisement) {
+		this.advertisement = advertisement;
 	}
 
-	
+	/**
+	 * @return the panel
+	 */
+	public Panel getPanel() {
+		return panel;
+	}
 
 	/**
-	 * @param panels the panels to set
+	 * @param panel the panel to set
 	 */
-	public void setPanels(Set<Panel> panels) {
-		this.panels = panels;
+	public void setPanel(Panel panel) {
+		this.panel = panel;
+	}
+
+	/**
+	 * @return the startTime
+	 */
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	/**
+	 * @return the endTime
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 	/**
@@ -174,7 +196,9 @@ public class Restriction implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+		result = prime * result + ((panel == null) ? 0 : panel.hashCode());
+		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
 		return result;
 	}
 
@@ -186,44 +210,24 @@ public class Restriction implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Restriction other = (Restriction) obj;
-		if (type == null) {
-			if (other.type != null)
+		Schedule other = (Schedule) obj;
+		if (endTime == null) {
+			if (other.endTime != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!endTime.equals(other.endTime))
+			return false;
+		if (panel == null) {
+			if (other.panel != null)
+				return false;
+		} else if (!panel.equals(other.panel))
+			return false;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
 			return false;
 		return true;
-	}
-
-	/**
-	 * @return the advertisements
-	 */
-	public Set<Advertisement> getAdvertisements() {
-		return advertisements;
-	}
-
-	/**
-	 * @param advertisements the advertisements to set
-	 */
-	public void addAdvertisements(Advertisement advertisement) {
-		if (advertisement == null || this.advertisements.contains(advertisement)) {
-			return;
-		}
-		this.advertisements.add(advertisement);
-		advertisement.setRestriction(this);
-	}
+	} 
 	
-	/**
-	 * 
-	 * @param advertisement
-	 */
-	public void removeAdvertisements(Advertisement advertisement) {
-		if (advertisement == null) {
-			return;
-		}
-		this.advertisements.remove(advertisement);
-		advertisement.setRestriction(null);
-	}
 
-	
 }
